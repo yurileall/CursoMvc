@@ -1,7 +1,7 @@
 <?php
-    $dbPath = __DIR__ . '/banco.sqlite';
-    $pdo = new PDO("sqlite:$dbPath");
-    $videoList = $pdo->query('SELECT * FROM videos;')->fetchAll(\PDO::FETCH_ASSOC);
+$dbPath = __DIR__ . '/banco.sqlite';
+$pdo = new PDO("sqlite:$dbPath");
+$videoList = $pdo->query('SELECT * FROM videos;')->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -24,34 +24,32 @@
     <header>
 
         <nav class="cabecalho">
-            <a class="logo" href="./index.html"></a>
+            <a class="logo" href="./index.php"></a>
 
             <div class="cabecalho__icones">
                 <a href="./pages/enviar-video.html" class="cabecalho__videos"></a>
-                <a href="./pages/login.html" class="cabecalho__sair">Sair</a>
+                <a href="./pages/login.php" class="cabecalho__sair">Sair</a>
             </div>
         </nav>
 
     </header>
 
     <ul class="videos__container" alt="videos alura">
-        <?php foreach ($videoList as $video ) { ?>
-           <?php if (str_starts_with($video['url'] ?? "", 'http')) { ?>
-                <li class="videos__item">
-                    <iframe width="100%" height="72%" src="<?php echo $video['url']; ?>"
-                        title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen></iframe>
-                    <div class="descricao-video">
-                        <img src="./img/logo.png" alt="logo canal alura">
-                        <h3> <?php echo $video['title'] ?></h3>
-                        <div class="acoes-video">
-                            <a href="./pages/enviar-video.html">Editar</a>
-                            <a href="./pages/enviar-video.html">Excluir</a>
-                        </div>
+        <?php foreach ($videoList as $video) { ?>
+            <?php if (strpos($video['url'], 'http') === false) {
+                $video['url'] = 'https://www.youtube.com/embed/0eMtvsxjdDo?si=rqs7KYR4Y7aP95a7';
+            } ?>
+            <li class="videos__item">
+                <iframe width="100%" height="72%" src="<?= $video['url']; ?>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="descricao-video">
+                    <img src="./img/logo.png" alt="logo canal alura">
+                    <h3> <?php echo $video['title'] ?></h3>
+                    <div class="acoes-video">
+                        <a href="./pages/enviar-video.html">Editar</a>
+                        <a href="/remover-video.php?id= <?= $video['id']; ?>">Excluir</a>
                     </div>
-                </li>
-            <?php } ?>
+                </div>
+            </li>
         <?php } ?>
     </ul>
 </body>
